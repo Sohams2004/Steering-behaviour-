@@ -40,9 +40,13 @@ public class SteeringBehaviours : MonoBehaviour
     {
         if (isSeeking)
         {
+            Debug.Log("Seeking");
             Vector3 attract = (player.transform.position - transform.position).normalized;
             rb.velocity = attract * followSpeed;
         }
+
+        else
+            rb.velocity = Vector3.zero;
     }
 
     //FLEE Steering Behaviour

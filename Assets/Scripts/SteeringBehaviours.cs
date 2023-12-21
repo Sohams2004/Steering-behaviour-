@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SteeringBehaviours : MonoBehaviour
@@ -13,6 +14,7 @@ public class SteeringBehaviours : MonoBehaviour
 
     [SerializeField] float followSpeed;
     [SerializeField] float repulseSpeed;
+    [SerializeField] float detectionRange;
 
     [SerializeField] bool isSeeking;
     [SerializeField] bool isFleeing;
@@ -41,8 +43,9 @@ public class SteeringBehaviours : MonoBehaviour
         if (isSeeking)
         {
             Debug.Log("Seeking");
-            Vector3 attract = (player.transform.position - transform.position).normalized;
-            rb.velocity = attract * followSpeed;
+            Vector3 desiredVelocity = (player.transform.position - transform.position).normalized * followSpeed;
+            Vector3 steeringForce = desiredVelocity - rb.velocity;
+            rb.AddForce(steeringForce);
         }
 
         else
@@ -64,10 +67,14 @@ public class SteeringBehaviours : MonoBehaviour
     }
     void Fleeing()
     {
+        float distance = transform.position.magnitude - player.transform.position.magnitude;
+        Debug.Log(distance);
+
         if (isFleeing)
         {
-            Vector3 attract = (transform.position - player.transform.position).normalized;
-            rb.velocity = attract * repulseSpeed;
+            Vector3 desiredVelocity = (transform.position - player.transform.position).normalized * repulseSpeed;
+            Vector3 steeringForce = desiredVelocity - rb.velocity;
+            rb.AddForce(steeringForce);
         }
     }
 
